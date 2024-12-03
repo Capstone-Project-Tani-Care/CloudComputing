@@ -22,13 +22,26 @@ def verify_user(token):
     try:
         decoded_token = auth.verify_id_token(token)
         return decoded_token['uid']
+    except auth.InvalidIdTokenError:
+        raise ValueError("Invalid authentication token.")
     except Exception as e:
         raise ValueError(f"Error verifying token: {str(e)}")
+
+def verify_user_and_get_details(token):
+    """Verify token and return user details."""
+    try:
+        uid = verify_user(token)
+        user = get_user_by_uid(uid)
+        if not user:
+            raise ValueError("User not found in Firestore.")
+        return user
+    except Exception as e:
+        raise ValueError(f"Error retrieving user details: {str(e)}")
 
 def login_user(email, password):
     try:
         # Firebase Web API Key (you need to set this up in your Firebase Console)
-        API_KEY = 'app_key'
+        API_KEY = 'api_key'
         
         # Firebase Auth REST API endpoint for email/password sign-in
         url = f'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={API_KEY}'
@@ -52,3 +65,14 @@ def login_user(email, password):
         
     except Exception as e:
         raise ValueError(f"Login failed: {str(e)}")
+
+# Helper to fetch user details from Firestore
+def get_user_by_uid(uid):
+    """Fetch user details from Firestore."""
+    try:
+        doc = db.collection('users').document(uid).get()
+        if doc.exists:
+            return doc.to_dict()
+        return None
+    except Exception as e:
+        raise ValueError(f"Error fetching user details: {str(e)}")
