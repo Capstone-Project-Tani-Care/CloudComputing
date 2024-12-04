@@ -27,7 +27,7 @@ def verify_user(token):
     except Exception as e:
         raise ValueError(f"Error verifying token: {str(e)}")
 
-def verify_user_and_get_details(token):
+def get_user_by_uid_and_get_details(token):
     """Verify token and return user details."""
     try:
         uid = verify_user(token)
@@ -41,7 +41,7 @@ def verify_user_and_get_details(token):
 def login_user(email, password):
     try:
         # Firebase Web API Key (you need to set this up in your Firebase Console)
-        API_KEY = 'api_key'
+        API_KEY = 'apikey'
         
         # Firebase Auth REST API endpoint for email/password sign-in
         url = f'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={API_KEY}'
@@ -76,3 +76,24 @@ def get_user_by_uid(uid):
         return None
     except Exception as e:
         raise ValueError(f"Error fetching user details: {str(e)}")
+    
+def update_user_email(uid, new_email):
+
+    try:
+        auth.update_user(uid, email=new_email)
+    except Exception as e:
+        raise ValueError(f"Failed to update email: {str(e)}")
+
+def update_user_password(uid, new_password):
+
+    try:
+        auth.update_user(uid, password=new_password)
+    except Exception as e:
+        raise ValueError(f"Failed to update password: {str(e)}")
+
+def update_user_display_name(uid, display_name):
+
+    try:
+        auth.update_user(uid, display_name=display_name)
+    except Exception as e:
+        raise ValueError(f"Failed to update display name: {str(e)}")

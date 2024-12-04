@@ -1,5 +1,9 @@
 flask
 firebase-admin
 google-cloud-firestore
-gunicorn
 requests
+google-cloud-storage
+numpy
+pillow
+tflite
+tensorflow
