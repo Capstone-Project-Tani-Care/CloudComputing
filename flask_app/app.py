@@ -20,7 +20,9 @@ from werkzeug.utils import secure_filename
 from google.cloud import storage
 from utils.tflite_model import load_tflite_model_from_gcs, run_tflite_inference
 from utils.image_preprocess import preprocess_image
+from models.wilayah_lookup import load_all_regions, suggest_regions_by_name, get_codes_by_name
 import requests
+
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = "./uploads"
@@ -448,6 +450,49 @@ def predict_disease(plant):
                 'treatment': treatment,
             }
         }), 200
+
+    except Exception as e:
+        return jsonify({'error': True, 'message': str(e)}), 500
+
+WILAYAH_FILEPATH = "data/base.csv"
+all_regions = load_all_regions(WILAYAH_FILEPATH)
+
+@app.route('/region_name', methods=['GET'])
+def get_suggestions_by_name():
+    """
+    Suggest regions based on name matching.
+    """
+    try:
+        query = request.args.get('query')
+        if not query:
+            return jsonify({'error': True, 'message': 'Query parameter is required'}), 400
+
+        # Get matching regions (limited to 10 results)
+        suggestions = suggest_regions_by_name(all_regions, query)
+        if not suggestions:
+            return jsonify({'status': 'success', 'message': 'No matches found', 'data': []}), 200
+
+        return jsonify({'status': 'success', 'data': suggestions}), 200
+
+    except Exception as e:
+        return jsonify({'error': True, 'message': str(e)}), 500
+
+@app.route('/region_code', methods=['GET'])
+def get_codes_by_region_name():
+    """
+    Get region codes by searching with region name.
+    """
+    try:
+        query = request.args.get('query')
+        if not query:
+            return jsonify({'error': True, 'message': 'Query parameter is required'}), 400
+
+        # Get matching region codes
+        matching_codes = get_codes_by_name(all_regions, query)
+        if not matching_codes:
+            return jsonify({'status': 'success', 'message': 'No matches found', 'data': []}), 200
+
+        return jsonify({'status': 'success', 'data': matching_codes}), 200
 
     except Exception as e:
         return jsonify({'error': True, 'message': str(e)}), 500
