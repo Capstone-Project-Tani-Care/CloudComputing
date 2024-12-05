@@ -5,5 +5,4 @@ requests
 google-cloud-storage
 numpy
 pillow
-tflite
 tensorflow

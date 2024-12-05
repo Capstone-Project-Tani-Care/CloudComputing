@@ -1,4 +1,5 @@
 import os
+import json
 import numpy as np
 from PIL import Image
 from flask import Flask, request, jsonify
@@ -17,6 +18,8 @@ from models.threadmodel import (
 from firebase_admin import firestore
 from werkzeug.utils import secure_filename
 from google.cloud import storage
+from utils.tflite_model import load_tflite_model_from_gcs, run_tflite_inference
+from utils.image_preprocess import preprocess_image
 import requests
 
 app = Flask(__name__)
@@ -390,6 +393,64 @@ def get_upvotes():
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
 import requests
+
+# Load treatment data
+with open('./utils/treatments.json') as f:
+    TREATMENTS = json.load(f)
+
+BUCKET_NAME = "tanicare"
+
+@app.route('/predict/<plant>', methods=['POST'])
+def predict_disease(plant):
+    """
+    Predict the disease for the given plant and return the treatment.
+    """
+    try:
+        if plant not in TREATMENTS:
+            return jsonify({'error': True, 'message': f'Unsupported plant type: {plant}'}), 400
+
+        if 'image' not in request.files:
+            return jsonify({'error': True, 'message': 'No image file provided'}), 400
+
+        file = request.files['image']
+        if not file:
+            return jsonify({'error': True, 'message': 'Invalid image file'}), 400
+
+        # Save uploaded file temporarily
+        filename = secure_filename(file.filename)
+        temp_image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(temp_image_path)
+
+        # Load the model directly from GCS
+        model_name = f"{plant.capitalize()}.tflite"
+        interpreter = load_tflite_model_from_gcs(BUCKET_NAME, model_name)
+
+        # Preprocess the image
+        input_data = preprocess_image(temp_image_path, target_size=(150, 150))
+
+        # Run inference
+        predictions = run_tflite_inference(interpreter, input_data)
+        predicted_class_idx = predictions.argmax()
+        predicted_class_name = list(TREATMENTS[plant].keys())[predicted_class_idx]
+
+        # Retrieve the treatment for the predicted class
+        treatment = TREATMENTS[plant].get(predicted_class_name, "No treatment information available.")
+
+        # Clean up temporary files
+        os.remove(temp_image_path)
+
+        return jsonify({
+            'status': 'success',
+            'message': 'Prediction completed',
+            'data': {
+                'plant': plant,
+                'class': predicted_class_name,
+                'treatment': treatment,
+            }
+        }), 200
+
+    except Exception as e:
+        return jsonify({'error': True, 'message': str(e)}), 500
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
