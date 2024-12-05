@@ -41,7 +41,7 @@ def get_user_by_uid_and_get_details(token):
 def login_user(email, password):
     try:
         # Firebase Web API Key (you need to set this up in your Firebase Console)
-        API_KEY = 'AIzaSyBV3hTDylPuO2zfd36kQfR51tZrEMbm5Vo'
+        API_KEY = ''
         
         # Firebase Auth REST API endpoint for email/password sign-in
         url = f'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={API_KEY}'
