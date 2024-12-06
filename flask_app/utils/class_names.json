@@ -1,0 +1,30 @@
+{
+    "corn": {
+      "0": "Corn__northern_leaf_blight",
+      "1": "Corn__gray_leaf_spot",
+      "2": "Corn__common_rust",
+      "3": "Corn__healthy"
+    },
+    "potato": {
+      "0": "Late_Blight",
+      "1": "Healthy",
+      "2": "Early_Blight"
+    },
+    "rice": {
+      "0": "bacterial_leaf_blight",
+      "1": "brown_spot",
+      "2": "healthy",
+      "3": "leaf_smut"
+    },
+    "soybean": {
+      "0": "Caterpillar",
+      "1": "Diabrotica Speciosa",
+      "2": "Healthy"
+    },
+    "tomato": {
+      "0": "Tomato___Bacterial_spot",
+      "1": "Tomato___Early_blight",
+      "2": "Tomato___healthy",
+      "3": "Tomato___Late_blight"
+    }
+}

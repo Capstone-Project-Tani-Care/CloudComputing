@@ -11,28 +11,20 @@
     "Early_Blight": "Gunakan fungisida seperti azoksistrobin atau difenokonazol. Pastikan rotasi tanaman dan singkirkan daun yang terinfeksi."
   },
   "rice": {
-    "leaf_scald": "Gunakan fungisida berbahan aktif seperti propikonazol. Lakukan rotasi tanaman dan perbaiki drainase sawah.",
     "bacterial_leaf_blight": "Gunakan varietas tahan penyakit dan hindari pemupukan nitrogen berlebih. Gunakan antibiotik seperti streptomisin jika diperlukan.",
-    "narrow_brown_spot": "Semprotkan fungisida berbahan aktif seperti mankozeb atau tebukonazol. Tambahkan kalium untuk memperkuat tanaman.",
-    "healthy": "No treatment needed.",
     "brown_spot": "Gunakan fungisida seperti mankozeb atau propineb. Pastikan asupan kalium dan fosfor cukup.",
-    "leaf_blast": "Aplikasikan fungisida berbahan aktif seperti trifloksistrobin atau azoksistrobin. Kurangi kerapatan tanam untuk meningkatkan sirkulasi udara."
+    "healthy": "No treatment needed.",
+    "leaf_smut": "Aplikasikan fungisida berbahan aktif seperti trifloksistrobin atau azoksistrobin. Kurangi kerapatan tanam untuk meningkatkan sirkulasi udara."
   },
   "soybean": {
-    "Healthy": "No treatment needed.",
+    "Caterpillar": "Semprotkan insektisida berbahan aktif seperti klorfenapir atau deltametrin. Pantau tanaman secara rutin untuk mencegah serangan lebih lanjut.",
     "Diabrotica Speciosa": "Gunakan insektisida berbahan aktif seperti imidakloprid atau bifentrin. Lakukan rotasi tanaman untuk memutus siklus hidup hama.",
-    "Caterpillar": "Semprotkan insektisida berbahan aktif seperti klorfenapir atau deltametrin. Pantau tanaman secara rutin untuk mencegah serangan lebih lanjut."
+    "Healthy": "No treatment needed."
   },
   "tomato": {
-    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": "Cabut dan musnahkan tanaman yang terinfeksi. Kendalikan vektor (kutu kebul) dengan insektisida seperti imidakloprid.",
-    "Tomato___Tomato_mosaic_virus": "Hancurkan tanaman yang terinfeksi. Gunakan benih yang bebas virus dan desinfeksi alat-alat pertanian.",
-    "Tomato___Target_Spot": "Gunakan fungisida seperti klorotalonil atau mankozeb. Singkirkan bagian tanaman yang terinfeksi.",
-    "Tomato___Spider_mites Two-spotted_spider_mite": "Gunakan akarisida seperti abamektin. Tingkatkan kelembapan lingkungan untuk mengurangi populasi tungau.",
-    "Tomato___Septoria_leaf_spot": "Semprotkan fungisida seperti azoksistrobin atau mankozeb. Pastikan tanaman memiliki sirkulasi udara yang baik.",
-    "Tomato___healthy": "No treatment needed.",
     "Tomato___Bacterial_spot": "Gunakan tembaga oksiklorida sebagai bakterisida. Hindari penyiraman dengan sistem overhead.",
-    "Tomato___Late_blight": "Gunakan fungisida berbahan aktif seperti mankozeb atau azoksistrobin. Hindari kondisi lingkungan yang terlalu lembap.",
     "Tomato___Early_blight": "Semprotkan fungisida seperti propineb atau klorotalonil. Singkirkan daun yang terinfeksi dan lakukan rotasi tanaman.",
-    "Tomato___Leaf_Mold": "Gunakan fungisida seperti propikonazol atau klorotalonil. Pastikan sirkulasi udara cukup di area tanaman."
+    "Tomato___healthy": "No treatment needed.",
+    "Tomato___Late_blight": "Gunakan fungisida berbahan aktif seperti mankozeb atau azoksistrobin. Hindari kondisi lingkungan yang terlalu lembap."
   }
 }

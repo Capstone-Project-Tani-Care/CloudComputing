@@ -29,3 +29,10 @@ def get_codes_by_name(regions, query):
         if region['name'].lower().startswith(query_lower):
             suggestions.append({'kode_wilayah': region['kode_wilayah']})
     return suggestions
+
+def find_name_by_code(regions, kode_wilayah):
+ 
+    for region in regions:
+        if region['kode_wilayah'] == kode_wilayah:
+            return region  # Return the full region (kode_wilayah and name)
+    return None
