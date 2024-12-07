@@ -3,7 +3,7 @@ import json
 import numpy as np
 from PIL import Image
 from flask import Flask, request, jsonify
-from auth.firebase_auth import create_user, verify_user, get_user_by_uid_and_get_details, login_user, get_user_by_uid, update_user_email, update_user_password, update_user_display_name
+from auth.firebase_auth import create_user, verify_user, get_user_by_uid_and_get_details, login_user, get_user_by_uid, update_user_email, update_user_password, update_user_display_name, refresh_id_token
 from models.userModel import save_user_to_firestore, get_user_by_uid, get_user_profile, save_user_photo, update_user_location, add_created_thread_to_user
 from models.threadmodel import (
     save_thread_to_firestore,
@@ -13,7 +13,8 @@ from models.threadmodel import (
     save_upvote_to_firestore,
     check_if_user_upvoted,
     get_upvotes_by_thread_id,
-    get_all_threads
+    get_all_threads,
+    remove_upvote_from_firestore
 )
 from firebase_admin import firestore
 from werkzeug.utils import secure_filename
@@ -84,27 +85,38 @@ def login():
     try:
         data = request.json
         if not data or 'email' not in data or 'password' not in data:
-            return jsonify({
-                'error': True,
-                'message': 'Email and password are required'
-            }), 400
+            return jsonify({'error': True, 'message': 'Email and password are required'}), 400
 
         # Get credentials from request
         email = data['email']
         password = data['password']
 
-        # Authenticate user and get token
+        # Authenticate user and get tokens
         auth_result = login_user(email, password)
         
         return jsonify({
             'error': False,
             'message': 'Login successful',
             'userId': auth_result['uid'],
-            'token': auth_result['token']
+            'idToken': auth_result['idToken'],
+            'refreshToken': auth_result['refreshToken']
         }), 200
 
     except Exception as e:
         return jsonify({'error': True, 'message': str(e)}), 400
+
+@app.route('/refresh-token', methods=['POST'])
+def refresh_token():
+    try:
+        refresh_token = request.json.get('refreshToken')
+        if not refresh_token:
+            return jsonify({'error': True, 'message': 'Refresh token is required'}), 400
+        
+        tokens = refresh_id_token(refresh_token)
+        return jsonify({'status': 'success', 'data': tokens}), 200
+        
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/account/update-email', methods=['PUT'])
 def update_email():
@@ -185,27 +197,20 @@ def create_bookmark():
             .where('userId', '==', user['uid']) \
             .where('threadId', '==', thread_id) \
             .limit(1) \
-            .get()
+            .stream()
 
-        if len(existing_bookmark) > 0:
+        if any(existing_bookmark):
             return jsonify({'error': True, 'message': 'Thread already bookmarked'}), 400
 
         # Create bookmark
-        bookmark_id = f"bookmark-{user['uid'][:8]}-{thread_id[:8]}"
         bookmark_data = {
-            'id': bookmark_id,
             'userId': user['uid'],
             'threadId': thread_id,
             'createdAt': firestore.SERVER_TIMESTAMP
         }
+        db.collection('bookmarks').add(bookmark_data)
 
-        db.collection('bookmarks').document(bookmark_id).set(bookmark_data)
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Thread bookmarked successfully',
-            'data': bookmark_data
-        }), 201
+        return jsonify({'status': 'success', 'message': 'Bookmark created successfully'}), 201
 
     except Exception as e:
         return jsonify({'error': True, 'message': str(e)}), 500
@@ -558,41 +563,28 @@ def create_thread():
 @app.route('/threads', methods=['GET'])
 def fetch_threads():
     """
-    Fetch threads. Optionally fetch a single thread by thread_id.
+    Fetch threads with pagination. Optionally fetch a single thread by thread_id.
     """
     try:
-        # Ambil parameter thread_id dari query (opsional)
         thread_id = request.args.get('thread_id')
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
 
-        # Ambil token autentikasi
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({'error': True, 'message': 'Authorization token is required'}), 401
 
-        # Verifikasi user
         user = get_user_by_uid_and_get_details(token.split(' ')[1])
         uid = user['uid']
 
-        # Fetch single thread jika thread_id diberikan
         if thread_id:
             thread = get_thread_by_id(thread_id)
             if not thread:
                 return jsonify({'error': True, 'message': f'Thread with ID {thread_id} not found'}), 404
+            return jsonify({'status': 'success', 'data': {'thread': thread}}), 200
 
-            return jsonify({
-                'status': 'success',
-                'message': 'Thread fetched successfully',
-                'data': thread
-            }), 200
-
-        # Jika tidak ada thread_id, fetch semua thread
-        threads = get_all_threads()
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Threads fetched successfully',
-            'data': threads
-        }), 200
+        threads = get_all_threads(limit=limit, page=page)
+        return jsonify({'status': 'success', 'data': {'threads': threads}}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -665,66 +657,18 @@ def get_comments():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
-@app.route('/up-vote', methods=['POST'])
-def upvote_thread():
+@app.route('/threads/<thread_id>/upvote', methods=['POST'])
+def upvote_thread(thread_id):
     try:
         token = request.headers.get('Authorization')
         if not token:
             return jsonify({'error': True, 'message': 'Authorization token is required'}), 401
 
         user = get_user_by_uid_and_get_details(token.split(' ')[1])
+        user_id = user['uid']
 
-        data = request.json
-        thread_id = data.get('threadId')
-        if not thread_id:
-            return jsonify({'error': True, 'message': 'threadId is required'}), 400
-
-        # Check if the user has already upvoted this thread
-        upvote_query = db.collection('upvotes') \
-            .where('threadId', '==', thread_id) \
-            .where('userId', '==', user['uid']) \
-            .stream()
-
-        if any(upvote_query):
-            return jsonify({'error': True, 'message': 'You have already upvoted this thread'}), 400
-
-        upvote_id = f"upvote-{user['uid'][:8]}"
-        upvote = {
-            'id': upvote_id,
-            'threadId': thread_id,
-            'userId': user['uid'],
-            'voteType': 1
-        }
-        db.collection('upvotes').document(upvote_id).set(upvote)
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Thread upvoted',
-            'data': {'vote': upvote}
-        }), 200
-
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': str(e)}), 500
-
-@app.route('/up-vote', methods=['GET'])
-def get_upvotes():
-    try:
-        thread_id = request.args.get('threadId')
-        if not thread_id:
-            return jsonify({'error': True, 'message': 'threadId is required'}), 400
-
-        # Query upvotes by threadId
-        upvotes_ref = db.collection('upvotes').where('threadId', '==', thread_id).stream()
-        upvotes = [doc.to_dict() for doc in upvotes_ref]
-
-        # Count the number of upvotes
-        upvote_count = len(upvotes)
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Upvote count retrieved',
-            'data': {'upvoteCount': upvote_count}
-        }), 200
+        upvotes = save_upvote_to_firestore(thread_id, user_id)
+        return jsonify({'status': 'success', 'data': {'upvotes': upvotes}}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -739,34 +683,10 @@ def remove_upvote(thread_id):
             return jsonify({'error': True, 'message': 'Authorization token is required'}), 401
 
         user = get_user_by_uid_and_get_details(token.split(' ')[1])
+        user_id = user['uid']
 
-        # Find the upvote for this user and thread
-        upvote_query = db.collection('upvotes') \
-            .where('threadId', '==', thread_id) \
-            .where('userId', '==', user['uid']) \
-            .limit(1) \
-            .stream()
-
-        # Convert to list to check if upvote exists
-        upvotes = list(upvote_query)
-        if not upvotes:
-            return jsonify({
-                'error': True, 
-                'message': 'No upvote found for this thread'
-            }), 404
-
-        # Delete the upvote
-        upvote_doc = upvotes[0]
-        upvote_doc.reference.delete()
-
-        return jsonify({
-            'status': 'success',
-            'message': 'Upvote removed successfully',
-            'data': {
-                'threadId': thread_id,
-                'userId': user['uid']
-            }
-        }), 200
+        upvotes = remove_upvote_from_firestore(thread_id, user_id)
+        return jsonify({'status': 'success', 'data': {'upvotes': upvotes}}), 200
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500

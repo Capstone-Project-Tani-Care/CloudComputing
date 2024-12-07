@@ -34,12 +34,7 @@ def get_user_profile(uid):
     return None
 
 def update_user_location(uid, kode_wilayah, region_name):
-    """
-    Update the user's location in Firestore with kode wilayah and region name.
-    :param uid: User ID.
-    :param kode_wilayah: Kode wilayah to save.
-    :param region_name: Name of the region for reference.
-    """
+
     user_ref = db.collection('users').document(uid)
     user_ref.update({
         'location': kode_wilayah,
@@ -47,11 +42,7 @@ def update_user_location(uid, kode_wilayah, region_name):
     })
 
 def add_created_thread_to_user(uid, thread_id):
-    """
-    Add a created thread ID to the user's list in Firestore.
-    :param uid: User ID.
-    :param thread_id: The ID of the created thread.
-    """
+
     user_ref = db.collection('users').document(uid)
     user_ref.update({
         'created_threads': firestore.ArrayUnion([thread_id])  # Add thread_id to the array without duplicates

@@ -57,14 +57,42 @@ def login_user(email, password):
         
         if response.status_code != 200:
             raise ValueError(data.get('error', {}).get('message', 'Authentication failed'))
-            
+        
         return {
             'uid': data['localId'],
-            'token': data['idToken']
+            'idToken': data['idToken'],
+            'refreshToken': data['refreshToken']
         }
         
     except Exception as e:
         raise ValueError(f"Login failed: {str(e)}")
+
+def refresh_id_token(refresh_token):
+    try:
+        # Firebase Web API Key (you need to set this up in your Firebase Console)
+        API_KEY = 'AIzaSyBV3hTDylPuO2zfd36kQfR51tZrEMbm5Vo'
+        
+        # Firebase Auth REST API endpoint for token refresh
+        url = f'https://securetoken.googleapis.com/v1/token?key={API_KEY}'
+        
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token
+        }
+        
+        response = requests.post(url, data=payload)
+        data = response.json()
+        
+        if response.status_code != 200:
+            raise ValueError(data.get('error', {}).get('message', 'Token refresh failed'))
+        
+        return {
+            'idToken': data['id_token'],
+            'refreshToken': data['refresh_token']
+        }
+        
+    except Exception as e:
+        raise ValueError(f"Token refresh failed: {str(e)}")
 
 # Helper to fetch user details from Firestore
 def get_user_by_uid(uid):
