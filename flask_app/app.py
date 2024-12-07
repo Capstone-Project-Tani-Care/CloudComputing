@@ -667,13 +667,32 @@ def upvote_thread(thread_id):
         user = get_user_by_uid_and_get_details(token.split(' ')[1])
         user_id = user['uid']
 
-        upvotes = save_upvote_to_firestore(thread_id, user_id)
-        return jsonify({'status': 'success', 'data': {'upvotes': upvotes}}), 200
+        try:
+            upvotes = save_upvote_to_firestore(thread_id, user_id)
+            return jsonify({'status': 'success', 'data': {'upvotes': upvotes}}), 200
+        except ValueError as e:
+            return jsonify({'error': True, 'message': str(e)}), 400
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
 import requests
+
+@app.route('/threads/<thread_id>/upvotes', methods=['GET'])
+def get_upvotes(thread_id):
+    try:
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'error': True, 'message': 'Authorization token is required'}), 401
+
+        user = get_user_by_uid_and_get_details(token.split(' ')[1])
+        user_id = user['uid']
+
+        user_ids = get_upvotes_by_thread_id(thread_id)
+        return jsonify({'status': 'success', 'data': {'userIds': user_ids}}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/up-vote/<thread_id>', methods=['DELETE'])
 def remove_upvote(thread_id):

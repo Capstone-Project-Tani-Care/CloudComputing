@@ -71,6 +71,10 @@ def get_comments_by_thread_id(thread_id):
 # Upvotes
 def save_upvote_to_firestore(thread_id, user_id):
     """Save an upvote to Firestore and update the thread's upvote count."""
+    # Check if the user has already upvoted the thread
+    if check_if_user_upvoted(thread_id, user_id):
+        raise ValueError("User has already upvoted this thread")
+
     thread_ref = db.collection('threads').document(thread_id)
     thread = thread_ref.get()
     if not thread.exists:
@@ -79,6 +83,15 @@ def save_upvote_to_firestore(thread_id, user_id):
     thread_data = thread.to_dict()
     upvotes = thread_data.get('upVotes', 0) + 1
 
+    # Save the upvote
+    upvote_data = {
+        'threadId': thread_id,
+        'userId': user_id,
+        'voteType': 1  # 1 for upvote
+    }
+    db.collection('upvotes').add(upvote_data)
+
+    # Update the upvote count in the thread document
     thread_ref.update({'upVotes': upvotes})
     return upvotes
 
@@ -93,7 +106,9 @@ def check_if_user_upvoted(thread_id, user_id):
 def get_upvotes_by_thread_id(thread_id):
     """Retrieve all upvotes for a specific thread."""
     upvotes_ref = db.collection('upvotes').where('threadId', '==', thread_id).stream()
-    return [doc.to_dict() for doc in upvotes_ref]
+    upvotes = [doc.to_dict() for doc in upvotes_ref]
+    user_ids = [upvote['userId'] for upvote in upvotes]
+    return user_ids
 
 def remove_upvote_from_firestore(thread_id, user_id):
     """Remove an upvote from Firestore and update the thread's upvote count."""
@@ -125,3 +140,12 @@ def remove_upvote_from_firestore(thread_id, user_id):
 
     thread_ref.update({'upVotes': upvotes})
     return upvotes
+
+def check_if_user_upvoted(thread_id, user_id):
+    """Check if a user has already upvoted a thread."""
+    upvote_query = db.collection('upvotes') \
+        .where('threadId', '==', thread_id) \
+        .where('userId', '==', user_id) \
+        .limit(1) \
+        .stream()
+    return any(upvote_query)

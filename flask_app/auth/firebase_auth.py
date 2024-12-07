@@ -70,7 +70,7 @@ def login_user(email, password):
 def refresh_id_token(refresh_token):
     try:
         # Firebase Web API Key (you need to set this up in your Firebase Console)
-        API_KEY = 'AIzaSyBV3hTDylPuO2zfd36kQfR51tZrEMbm5Vo'
+        API_KEY = ''
         
         # Firebase Auth REST API endpoint for token refresh
         url = f'https://securetoken.googleapis.com/v1/token?key={API_KEY}'
