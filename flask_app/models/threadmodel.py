@@ -1,5 +1,6 @@
 from firebase_admin import firestore
 from .userModel import get_user_by_uid
+import uuid
 
 db = firestore.client()
 
@@ -50,17 +51,22 @@ def count_upvotes_by_thread_id(thread_id):
     return sum(1 for _ in upvotes_ref)
 
 # Comments
-def save_comment_to_firestore(comment_id, thread_id, content, owner, created_at):
-    """Save a comment to Firestore."""
+def save_comment_to_firestore(thread_id, content, owner, created_at):
+    """Save a comment to Firestore and update the thread's comment count."""
+    comment_id = f"comment-{uuid.uuid4()}"
     comment_data = {
         'id': comment_id,
         'content': content,
         'threadId': thread_id,
         'createdAt': created_at,
         'owner': owner,
-        'upVotes': [],
     }
     db.collection('comments').document(comment_id).set(comment_data)
+
+    # Increment the total comment count in the thread document
+    thread_ref = db.collection('threads').document(thread_id)
+    thread_ref.update({'totalComments': firestore.Increment(1)})
+
     return comment_data
 
 def get_comments_by_thread_id(thread_id):

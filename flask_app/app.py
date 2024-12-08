@@ -588,8 +588,8 @@ def fetch_threads():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
-
+    
+        data = request.json
 
 @app.route('/comments', methods=['POST'])
 def create_comment():
@@ -599,39 +599,26 @@ def create_comment():
             return jsonify({'error': True, 'message': 'Authorization token is required'}), 401
 
         user = get_user_by_uid_and_get_details(token.split(' ')[1])
-
+        user_id = user['uid']
         data = request.json
         thread_id = data.get('threadId')
         content = data.get('content')
 
         if not thread_id or not content:
-            return jsonify({'error': True, 'message': 'threadId and content are required'}), 400
+            return jsonify({'error': True, 'message': 'Thread ID and content are required'}), 400
 
-        comment_id = f"comment-{user['uid'][:8]}"
         created_at = firestore.SERVER_TIMESTAMP
-
-        # Save comment to Firestore
-        comment = {
-            'id': comment_id,
-            'content': content,
-            'threadId': thread_id,
-            'createdAt': created_at,
-            'owner': {
-                'id': user['uid'],
-                'name': user['name']
-            },
-            'upVotesBy': [],
+        owner = {
+            'id': user_id,
+            'name': user['name']
         }
-        db.collection('comments').document(comment_id).set(comment)
 
-        # Retrieve the saved comment
-        saved_comment = db.collection('comments').document(comment_id).get().to_dict()
+        comment = save_comment_to_firestore(thread_id, content, owner, created_at)
 
-        return jsonify({
-            'status': 'success',
-            'message': 'Comment created',
-            'data': {'comment': saved_comment}
-        }), 201
+        # Retrieve saved comment with resolved timestamp
+        saved_comment = db.collection('comments').document(comment['id']).get().to_dict()
+
+        return jsonify({'status': 'success', 'message': 'Comment created', 'data': {'comment': saved_comment}}), 201
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -655,7 +642,6 @@ def get_comments():
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
 
 @app.route('/threads/<thread_id>/upvote', methods=['POST'])
 def upvote_thread(thread_id):
