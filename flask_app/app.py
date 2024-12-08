@@ -615,10 +615,7 @@ def create_comment():
 
         comment = save_comment_to_firestore(thread_id, content, owner, created_at)
 
-        # Retrieve saved comment with resolved timestamp
-        saved_comment = db.collection('comments').document(comment['id']).get().to_dict()
-
-        return jsonify({'status': 'success', 'message': 'Comment created', 'data': {'comment': saved_comment}}), 201
+        return jsonify({'status': 'success', 'message': 'Comment created', 'data': {'comment': comment}}), 201
 
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -631,8 +628,7 @@ def get_comments():
             return jsonify({'error': True, 'message': 'threadId is required'}), 400
 
         # Query comments by threadId
-        comments_ref = db.collection('comments').where('threadId', '==', thread_id).stream()
-        comments = [doc.to_dict() for doc in comments_ref]
+        comments = get_comments_by_thread_id(thread_id)
 
         return jsonify({
             'status': 'success',

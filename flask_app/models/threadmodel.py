@@ -67,12 +67,26 @@ def save_comment_to_firestore(thread_id, content, owner, created_at):
     thread_ref = db.collection('threads').document(thread_id)
     thread_ref.update({'totalComments': firestore.Increment(1)})
 
-    return comment_data
+    # Fetch user details for the owner
+    user = get_user_by_uid(owner['id'])
+    comment_data['owner']['photoProfileUrl'] = user.get('profile_photo')
+
+    # Retrieve saved comment with resolved timestamp
+    saved_comment = db.collection('comments').document(comment_id).get().to_dict()
+    saved_comment['owner']['photoProfileUrl'] = user.get('profile_photo')
+
+    return saved_comment
 
 def get_comments_by_thread_id(thread_id):
-    """Retrieve all comments for a specific thread."""
+    """Retrieve all comments for a specific thread and include owner details."""
     comments_ref = db.collection('comments').where('threadId', '==', thread_id).stream()
-    return [doc.to_dict() for doc in comments_ref]
+    comments = []
+    for doc in comments_ref:
+        comment = doc.to_dict()
+        user = get_user_by_uid(comment['owner']['id'])
+        comment['owner']['photoProfileUrl'] = user.get('profile_photo')
+        comments.append(comment)
+    return comments
 
 # Upvotes
 def save_upvote_to_firestore(thread_id, user_id):
