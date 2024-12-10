@@ -1,4 +1,5 @@
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import json
 import numpy as np
 from PIL import Image
@@ -746,8 +747,8 @@ def predict_disease(plant):
                 class_name = plant_classes[idx]
                 prediction_probabilities[class_name] = float(prob)
 
-        predicted_class_name = plant_classes.get(predicted_class_idx, "Unknown")
-        treatment = TREATMENTS[plant].get(predicted_class_name, "No treatment information available.")
+        predicted_class_name = plant_classes.get(predicted_class_idx, "Penyakit Tidak Diketahui")
+        treatment = TREATMENTS[plant].get(predicted_class_name, "Tidak ada informasi terkait penyakit.")
 
         # Clean up temporary files
         os.remove(temp_image_path)

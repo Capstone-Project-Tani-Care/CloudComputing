@@ -4,6 +4,7 @@ import numpy as np
 import json
 from typing import Dict, Any
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 def load_class_names(json_path: str = './utils/class_names.json') -> Dict[str, Dict[int, str]]:
 

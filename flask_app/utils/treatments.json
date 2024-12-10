@@ -1,30 +1,30 @@
 {
   "corn": {
-    "Corn__northern_leaf_blight": "Gunakan fungisida berbahan aktif seperti azoksistrobin atau mankozeb. Lakukan rotasi tanaman dan gunakan varietas tahan penyakit.",
-    "Corn__gray_leaf_spot": "Semprotkan fungisida seperti propikonazol atau mankozeb. Hindari irigasi berlebihan dan lakukan pengelolaan residu tanaman.",
-    "Corn__common_rust": "Aplikasikan fungisida berbahan aktif seperti tebukonazol atau mankozeb saat gejala awal muncul. Gunakan varietas tahan rust.",
-    "Corn__healthy": "No treatment needed."
+    "Penyakit Daun Busuk": "Gunakan fungisida berbahan aktif seperti azoksistrobin atau mankozeb. Lakukan rotasi tanaman dan gunakan varietas tahan penyakit.",
+    "Penyakit Bercak Daun Abu-abu": "Semprotkan fungisida seperti propikonazol atau mankozeb. Hindari irigasi berlebihan dan lakukan pengelolaan residu tanaman.",
+    "Penyakit Karat Daun": "Aplikasikan fungisida berbahan aktif seperti tebukonazol atau mankozeb saat gejala awal muncul. Gunakan varietas tahan rust.",
+    "Jagung Sehat": "Tidak perlu penanganan, tanaman ini sehat."
   },
   "potato": {
-    "Late_Blight": "Semprotkan fungisida berbahan aktif seperti mankozeb atau klorotalonil. Hindari area yang terlalu lembap dan gunakan benih bersertifikat bebas penyakit.",
-    "Healthy": "No treatment needed.",
-    "Early_Blight": "Gunakan fungisida seperti azoksistrobin atau difenokonazol. Pastikan rotasi tanaman dan singkirkan daun yang terinfeksi."
+    "Penyakit Daun Busuk": "Semprotkan fungisida berbahan aktif seperti mankozeb atau klorotalonil. Hindari area yang terlalu lembap dan gunakan benih bersertifikat bebas penyakit.",
+    "Kentang Sehat": "Tidak perlu penanganan, tanaman ini sehat.",
+    "Penyakit Daun Busuk Awal": "Gunakan fungisida seperti azoksistrobin atau difenokonazol. Pastikan rotasi tanaman dan singkirkan daun yang terinfeksi."
   },
   "rice": {
-    "bacterial_leaf_blight": "Gunakan varietas tahan penyakit dan hindari pemupukan nitrogen berlebih. Gunakan antibiotik seperti streptomisin jika diperlukan.",
-    "brown_spot": "Gunakan fungisida seperti mankozeb atau propineb. Pastikan asupan kalium dan fosfor cukup.",
-    "healthy": "No treatment needed.",
-    "leaf_smut": "Aplikasikan fungisida berbahan aktif seperti trifloksistrobin atau azoksistrobin. Kurangi kerapatan tanam untuk meningkatkan sirkulasi udara."
+    "Penyakit Daun Busuk Akibat Bakteri": "Gunakan varietas tahan penyakit dan hindari pemupukan nitrogen berlebih. Gunakan antibiotik seperti streptomisin jika diperlukan.",
+    "Bercak Coklat": "Gunakan fungisida seperti mankozeb atau propineb. Pastikan asupan kalium dan fosfor cukup.",
+    "Padi Sehat": "Tidak perlu penanganan, tanaman ini sehat.",
+    "Penyakit Daun Busuk": "Aplikasikan fungisida berbahan aktif seperti trifloksistrobin atau azoksistrobin. Kurangi kerapatan tanam untuk meningkatkan sirkulasi udara."
   },
   "soybean": {
-    "Caterpillar": "Semprotkan insektisida berbahan aktif seperti klorfenapir atau deltametrin. Pantau tanaman secara rutin untuk mencegah serangan lebih lanjut.",
-    "Diabrotica Speciosa": "Gunakan insektisida berbahan aktif seperti imidakloprid atau bifentrin. Lakukan rotasi tanaman untuk memutus siklus hidup hama.",
-    "Healthy": "No treatment needed."
+    "Serangan Ulat": "Semprotkan insektisida berbahan aktif seperti klorfenapir atau deltametrin. Pantau tanaman secara rutin untuk mencegah serangan lebih lanjut.",
+    "Serangan Serangga": "Gunakan insektisida berbahan aktif seperti imidakloprid atau bifentrin. Lakukan rotasi tanaman untuk memutus siklus hidup hama.",
+    "Kedelai Sehat": "Tidak perlu penanganan, tanaman ini sehat."
   },
   "tomato": {
-    "Tomato___Bacterial_spot": "Gunakan tembaga oksiklorida sebagai bakterisida. Hindari penyiraman dengan sistem overhead.",
-    "Tomato___Early_blight": "Semprotkan fungisida seperti propineb atau klorotalonil. Singkirkan daun yang terinfeksi dan lakukan rotasi tanaman.",
-    "Tomato___healthy": "No treatment needed.",
-    "Tomato___Late_blight": "Gunakan fungisida berbahan aktif seperti mankozeb atau azoksistrobin. Hindari kondisi lingkungan yang terlalu lembap."
+    "Penyakit Bercak Bakteri": "Gunakan tembaga oksiklorida sebagai bakterisida. Hindari penyiraman dengan sistem overhead.",
+    "Penyakit Busuk Dini Daun": "Semprotkan fungisida seperti propineb atau klorotalonil. Singkirkan daun yang terinfeksi dan lakukan rotasi tanaman.",
+    "Tomat Sehat": "Tidak perlu penanganan, tanaman ini sehat.",
+    "Penyakit Busuk Daun": "Gunakan fungisida berbahan aktif seperti mankozeb atau azoksistrobin. Hindari kondisi lingkungan yang terlalu lembap."
   }
 }

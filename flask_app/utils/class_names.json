@@ -1,30 +1,30 @@
 {
     "corn": {
-      "0": "Corn__northern_leaf_blight",
-      "1": "Corn__gray_leaf_spot",
-      "2": "Corn__common_rust",
-      "3": "Corn__healthy"
+      "0": "Penyakit Daun Busuk",
+      "1": "Penyakit Bercak Daun Abu-abu",
+      "2": "Jagung Sehat",
+      "3": "Penyakit Karat Daun"
     },
     "potato": {
-      "0": "Late_Blight",
-      "1": "Healthy",
-      "2": "Early_Blight"
+      "0": "Penyakit Daun Busuk Awal",
+      "1": "Kentang Sehat",
+      "2": "Penyakit Daun Busuk"
     },
     "rice": {
-      "0": "bacterial_leaf_blight",
-      "1": "brown_spot",
-      "2": "healthy",
-      "3": "leaf_smut"
+      "0": "Penyakit Daun Busuk Akibat Bakteri",
+      "1": "Bercak Coklat",
+      "2": "Padi Sehat",
+      "3": "Penyakit Daun Busuk"
     },
     "soybean": {
-      "0": "Caterpillar",
-      "1": "Diabrotica Speciosa",
-      "2": "Healthy"
+      "0": "Serangan Ulat",
+      "1": "Serangan Serangga",
+      "2": "Kedelai Sehat"
     },
     "tomato": {
-      "0": "Tomato___Bacterial_spot",
-      "1": "Tomato___Early_blight",
-      "2": "Tomato___healthy",
-      "3": "Tomato___Late_blight"
+      "0": "Penyakit Bercak Bakteri",
+      "1": "Penyakit Busuk Dini Daun",
+      "2": "Penyakit Busuk Daun",
+      "3": "Tomat Sehat"
     }
 }
