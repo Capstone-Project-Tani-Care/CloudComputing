@@ -42,12 +42,13 @@ Agriculture is the backbone of Indonesia's economy, yet crop diseases pose a maj
 
 ## 🌾 *Project Cloud Computing*
 Architecture
+
 ![Untitled Diagram (1)](https://github.com/user-attachments/assets/2cf0f82a-2ddf-4532-9bda-f238d689d301)
 
 ---
 
 ## 📁 *API Documentation*
-
+> Base url of this service is: http://localhost:4000/
 - Authentications
   <pre>POST  /signup</pre>
   <pre>POST  /login</pre>
