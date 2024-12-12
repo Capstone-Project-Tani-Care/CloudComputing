@@ -56,7 +56,7 @@ Architecture
   <pre>PUT  /account/update-password</pre>
   
 - User
-  <pre>GET  /profile?userid=</pre>
+  <pre>GET  /profile</pre>
   <pre>POST  /profile/photo</pre>
   <pre>PUT  /edit-profile/name</pre>
   <pre>GET  /edit-profile/location</pre>
@@ -81,4 +81,4 @@ Architecture
   <pre>GET  /comments</pre>
   <pre>POST  /up-vote</pre>
   <pre>GET  /threads/<threads_id>/upvotes</pre>
-  <pre>DEL  /up-vote/<threads_id></pre>
+  <pre>DEL  /up-vote</pre>
