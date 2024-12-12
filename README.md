@@ -50,35 +50,39 @@ Architecture
 
 - Authentications
   <pre>POST  /signup</pre>
-  <pre>POST /login</pre>
+  <pre>POST  /login</pre>
   <pre>POST  /refresh-token</pre>
-  <pre>PUT  /account/update-email</pre>
-  <pre>PUT  /account/update-password</pre>
+  <pre>PUT   /account/update-email</pre>
+  <pre>PUT   /account/update-password</pre>
   
 - User
-  <pre>GET  /profile</pre>
+  <pre>GET   /profile</pre>
   <pre>POST  /profile/photo</pre>
-  <pre>PUT  /edit-profile/name</pre>
-  <pre>GET  /edit-profile/location</pre>
-  <pre>PUT  /edit-profile/location-by-name</pre>
+  <pre>PUT   /edit-profile/name</pre>
+  <pre>GET   /edit-profile/location</pre>
+  <pre>PUT   /edit-profile/location-by-name</pre>
   <pre>POST  /edit-profile/about</pre>
 
-- Predictions
-  <pre>POST /prediction/potato</pre>
-  <pre>POST /prediction/corn</pre>
-  <pre>POST /prediction/rice</pre>
-  <pre>POST /prediction/soybean</pre>
-  <pre>POST /prediction/tomato</pre>
+- Disease Predictions
+  <pre>POST  /prediction/potato</pre>
+  <pre>POST  /prediction/corn</pre>
+  <pre>POST  /prediction/rice</pre>
+  <pre>POST  /prediction/soybean</pre>
+  <pre>POST  /prediction/tomato</pre>
+
+- Weather Prediction
+  <pre>GET   /region_name</pre>
+  <pre>GET   /region_code?</pre>
 
 - Thread
   <pre>POST  /threads</pre>
-  <pre>GET  /threads fetch</pre>
-  <pre>GET  /threadsid</pre>
+  <pre>GET   /threads fetch</pre>
+  <pre>GET   /threadsid</pre>
   <pre>POST  /bookmarks</pre>
-  <pre>GET  /bookmarks</pre>
-  <pre>DEL  /bookmarks</pre>
+  <pre>GET   /bookmarks</pre>
+  <pre>DEL   /bookmarks</pre>
   <pre>POST  /comments</pre>
-  <pre>GET  /comments</pre>
+  <pre>GET   /comments</pre>
   <pre>POST  /up-vote</pre>
-  <pre>GET  /threads/<threads_id>/upvotes</pre>
-  <pre>DEL  /up-vote</pre>
+  <pre>GET   /threads/threads_id/upvotes</pre>
+  <pre>DEL   /up-vote</pre>
