@@ -48,7 +48,7 @@ Architecture
 ---
 
 ## 📁 *API Documentation*
-> Base url of this service is: http://localhost:4000/
+> Base url of this local service is: http://localhost:5000/
 - Authentications
   <pre>POST  /signup</pre>
   <pre>POST  /login</pre>
